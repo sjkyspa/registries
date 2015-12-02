@@ -1,5 +1,5 @@
 FROM alpine:3.2
-RUN apk --update add curl
+RUN apk --update add curl bash
 # Java Version
 ENV JAVA_VERSION_MAJOR 8
 ENV JAVA_VERSION_MINOR 66
