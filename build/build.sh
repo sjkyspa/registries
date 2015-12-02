@@ -2,7 +2,7 @@
 cd /tmp/repo/app
 echo `pwd`
 ls
-mysql=$(docker run -d -p 3306:3306 -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql 172.17.8.101:5000/mysql)
+mysql=$(docker run -d -p 3306:3306 -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql 10.21.1.214:5000/mysql)
 gradle fC fM
 gradle test
 gradle standaloneJar
