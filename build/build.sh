@@ -17,3 +17,4 @@ CMD ["java", "-jar", "ketsu-standalone.jar"]
 EOF
 
 docker build -t $IMAGE /tmp/repo
+docker stop $mysql && docker rm $mysql
