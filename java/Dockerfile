@@ -1,5 +1,5 @@
 FROM alpine:3.2
-RUN apk --update add curl bash
+RUN apk --update add curl
 # Java Version
 ENV JAVA_VERSION_MAJOR 8
 ENV JAVA_VERSION_MINOR 66
@@ -45,4 +45,4 @@ RUN apk add --update wget ca-certificates && \
 # Set environment
 ENV JAVA_HOME /opt/jdk
 ENV PATH ${PATH}:${JAVA_HOME}/bin
-RUN apk remove curl
+RUN apk del curl
