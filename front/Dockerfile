@@ -1,6 +1,8 @@
-FROM alpine:3.2
-RUN apk --update add docker \
-    rm -rf /var/cache/apk/*
+FROM mhart/alpine-node
+RUN apk update \
+    && apk add docker python make g++ \
+    && rm -rf /var/cache/apk/*
+
 ADD build.sh build.sh
 RUN chmod +x build.sh
 ENTRYPOINT ["./build.sh"]
