@@ -6,7 +6,7 @@ if [ $? -ne 0 ]; then
 fi
 export DATABASE="jdbc:mysql://$HOST:3306/ke_tsu?user=mysql&password=mysql"
 gradle fC fM
-jdbc:mysql://ke-tsu.czgybqrswzvu.us-west-1.rds.amazonaws.com:3306/ketsu?user=ketsuadmin&password=th0ughtw0rks
+
 echo "db.url=jdbc:mysql://$HOST:3306/ke_tsu?user=mysql&password=mysql">src/test/resources/db.properties
 echo "db.username=mysql">>src/test/resources/db.properties
 echo "db.password=mysql">>src/test/resources/db.properties
@@ -29,7 +29,7 @@ ADD build/libs/ketsu-standalone.jar ketsu-standalone.jar
 ADD wrapper.sh wrapper.sh
 RUN chmod +x wrapper.sh
 EXPOSE 8088
-ENTRYPOINT ["wrapper.sh"]
+ENTRYPOINT ["./wrapper.sh"]
 EOF
 
 docker build -t $IMAGE /tmp/repo/app
