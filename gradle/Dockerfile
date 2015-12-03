@@ -1,5 +1,5 @@
-FROM 172.17.8.101:5000/java
-RUN apk --update add bash 
+FROM 10.21.1.214:5000/java
+RUN apk --update add openssl bash
 
 ENV IVY_HOME /cache
 ENV GRADLE_VERSION 2.8
