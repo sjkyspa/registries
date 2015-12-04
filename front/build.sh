@@ -5,8 +5,9 @@ npm install -g webpack
 webpack
 
 cat > run.sh << EOF
+#!/bin/sh
 sed -i -e "s#{{API_PREFIX}}#\$API_PREFIX#g" /usr/share/nginx/html/bundle.js
-exec "$@"
+exec "\$@"
 EOF
 
 cat > Dockerfile << EOF
@@ -16,6 +17,7 @@ ADD run.sh run.sh
 RUN chmod +x run.sh
 ADD /dist /usr/share/nginx/html
 ENTRYPOINT ["./run.sh"]
+CMD ["nginx", "-g", "daemon off;"]
 EOF
 
 docker build -t $IMAGE /tmp/repo
