@@ -6,20 +6,11 @@ if [ $? -ne 0 ]; then
 fi
 export DATABASE="jdbc:mysql://$HOST:3306/ke_tsu?user=mysql&password=mysql"
 gradle fC fM
-
-echo "db.url=jdbc:mysql://$HOST:3306/ke_tsu?user=mysql&password=mysql">src/test/resources/db.properties
-echo "db.username=mysql">>src/test/resources/db.properties
-echo "db.password=mysql">>src/test/resources/db.properties
-
 gradle test -i
 gradle standaloneJar
 
 cat > /tmp/repo/app/wrapper.sh << EOF
 #!/bin/sh
-mkdir /config
-echo "db.url=\${DATABASE}">/config/db.properties
-echo "db.username=mysql">>/config/db.properties
-echo "db.password=mysql">>/config/db.properties
 java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 
