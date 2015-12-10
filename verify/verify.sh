@@ -22,15 +22,20 @@ cd /tmp/repo
 first_commit=$(git log --reverse --pretty=format:%at |head -n1)
 last_commit=$(git log --pretty=format:%at -n 1)
 evaluation_duration=$(eval 'expr $last_commit - $first_commit')
+puts_green "$first_commit"
+puts_green "$last_commit"
+puts_green "$evaluation_duration"
 
 
 puts_step "Start sync to ketsu"
 evaluation_uri=$(cat manifest.json| jq -r '.evaluation_uri')
+puts_green "$evaluation_uri"
 if [ -n "$evaluation_uri" ] ; then
     puts_red "missing manifest.json"
     exit 1
 fi
 entry_point=$(echo $evaluation_uri | awk -F/ '{print $3}')
+puts_green "$entry_point"
 
 if [ -n "$entry_point" ] ; then
     puts_red "bad format of manifest.json"
