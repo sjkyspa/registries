@@ -68,7 +68,7 @@ EOF
 
 cat > /tmp/repo/app/Dockerfile << EOF
 FROM 10.21.1.214:5000/java
-RUN apk --update add tar
+RUN apk --update add tar bash
 ENV ETCD_VERSION 2.1.2
 RUN curl -jksSL https://github.com/coreos/etcd/releases/download/v\${ETCD_VERSION}/etcd-v\${ETCD_VERSION}-linux-amd64.tar.gz \
 	|   tar -xzf - -C /usr/local/bin/ --strip-components=1 && \
