@@ -78,7 +78,7 @@ RUN curl -jksSL https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux
 ADD src/main/resources/db/migration dbmigration
 RUN mkdir /usr/local/bin/flyway && \
     curl -jksSL https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz \
-    | tar -xzf - -C /usr/local/bin/flyway
+    | tar -xzf - -C /usr/local/bin/flyway --strip-components=1
 ENV PATH /usr/local/bin/flyway/:$PATH
 ADD build/libs/ketsu-standalone.jar ketsu-standalone.jar
 ADD wrapper.sh wrapper.sh
