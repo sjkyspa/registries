@@ -38,7 +38,7 @@ cat >mysql.json <<EOFINNER
     {
       "section": "Service",
       "name": "ExecStart",
-      "value": "/bin/sh -c \"docker run --name %n --rm -v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=mysql -e MYSQL_USER=mysql -e SERVICE_NAME=%n -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=mysql -P  mysql\""
+      "value": "/bin/sh -c \"docker run --name %n --rm -v /var/run/docker.sock:/var/run/docker.sock -e MYSQL_ROOT_PASSWORD=mysql -e MYSQL_USER=mysql -e SERVICE_NAME=%n -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -P  mysql\""
     },
     {
       "section": "Service",
@@ -60,7 +60,7 @@ fi
 echo "find backend service"
 credential=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.service/data|jq -r '.node.value')
 ipport=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.service|jq -r '.node.nodes|.[]|select(.key != "/services/'"${APP_NAME}"'_mysql.service/data") |.value')
-export DATABASE="jdbc:mysql://${ipport}/mysql?${credential}"
+export DATABASE="jdbc:mysql://${ipport}/appdb?${credential}"
 java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 ) > wrapper.sh
