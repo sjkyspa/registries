@@ -62,6 +62,7 @@ credential=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.
 ipport=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.service|jq -r '.node.nodes|.[]|select(.key != "/services/'"${APP_NAME}"'_mysql.service/data") |.value')
 export DATABASE="jdbc:mysql://${ipport}/appdb?${credential}"
 flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
+flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init-version"
 java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 ) > wrapper.sh
@@ -76,6 +77,7 @@ RUN curl -jksSL https://github.com/coreos/etcd/releases/download/v\${ETCD_VERSIO
 RUN curl -jksSL https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/local/bin/jq && \
 	chmod +x /usr/local/bin/jq
 ADD src/main/resources/db/migration dbmigration
+ADD src/main/resources/db/init initmigration
 RUN mkdir /usr/local/bin/flyway && \
     curl -jksSL https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz \
     | tar -xzf - -C /usr/local/bin/flyway --strip-components=1
