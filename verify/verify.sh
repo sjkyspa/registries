@@ -47,11 +47,16 @@ if [ -f "/tmp/repo/manifest.json" ]; then
         exit 1
     fi
 
-    curl -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg"
-    curl -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg"
+    curl -sSL -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg"
+    authentication_status=$(curl -sSL --write-out "%{http_code}" -X POST -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg")
+    if [ "$authentication_status" != "200" ] ; then
+        puts_red "authentication failed, http code:$authentication_status"
+        exit 1
+    fi
+
     result_status=$(curl -sSL --write-out "%{http_code}" -X POST -c cookie -b cookie $evaluation_uri -d "score=$evaluation_duration" -d "status=PASSED")
     if [ "$result_status" != "200" ] ; then
-        puts_red "sync fail http code:$result_status"
+        puts_red "sync failed, http code:$result_status"
         exit 1
     fi
     puts_step "Sync to ketsu complete"
