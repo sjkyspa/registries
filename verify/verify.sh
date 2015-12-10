@@ -49,7 +49,7 @@ if [ -f "/tmp/repo/manifest.json" ]; then
 
     curl -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg"
     curl -c cookie -b cookie "$entry_point/authentication" -d "user_name=bg"
-    result_status=$(curl -sSL --write-out "%{http_code}" -X POST -c cookie -b cookie $evaluation_uri -d "score=600" -d "status=PASSED")
+    result_status=$(curl -sSL --write-out "%{http_code}" -X POST -c cookie -b cookie $evaluation_uri -d "score=$evaluation_duration" -d "status=PASSED")
     if [ "$result_status" != "200" ] ; then
         puts_red "sync fail http code:$result_status"
         exit 1
