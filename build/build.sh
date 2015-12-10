@@ -1,4 +1,23 @@
 #!/bin/sh
+
+puts_red() {
+    echo "\033[0;31m      $@"
+}
+
+puts_red_f() {
+  while read data; do
+    echo "\033[0;31m      $data"
+  done
+}
+
+puts_green() {
+  echo "\033[0;32m      $@"
+}
+
+puts_step() {
+  echo "\033[0;34m -----> $@"
+}
+
 cd /tmp/repo/app
 mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql 10.21.1.214:5000/mysql)
 if [ $? -ne 0 ]; then
@@ -6,9 +25,36 @@ if [ $? -ne 0 ]; then
 fi
 mysql_port=$(docker inspect ${mysql}|jq -r '.[0].NetworkSettings.Ports|to_entries[]|.value[0].HostPort')
 export DATABASE="jdbc:mysql://$HOST:$mysql_port/ke_tsu?user=mysql&password=mysql"
-gradle fC fM
-gradle test -i
-gradle standaloneJar
+
+echo
+puts_step "Start migratioin ..."
+gradle fC fM &> migration.log
+if [ "$?" != "0" ]; then
+  puts_red "Migration failed"
+  cat migration.log | puts_red_f
+fi
+puts_green "Migration success"
+puts_step "Migration complete"
+echo
+
+echo
+puts_step "Start test ..."
+gradle test -i &> test.log
+if [ "$?" != "0" ]; then
+  puts_red "Test failed"
+  cat test.log | puts_red_f
+fi
+puts_green "Test success"
+puts_step "Test complete"
+echo
+
+puts_step "Start generate standalone ..."
+gradle standaloneJar &>standalone.log
+if [ "$?" != "0" ]; then
+  puts_red "Generate standalone failed"
+  cat standalone.log | puts_red_f
+fi
+puts_step "Generate standalone Complete"
 
 (cat  <<'EOF'
 #!/bin/sh
@@ -90,5 +136,14 @@ EXPOSE 8088
 ENTRYPOINT ["./wrapper.sh"]
 EOF
 
+echo
+puts_step "Building image ..."
 docker build -t $IMAGE /tmp/repo/app
+puts_step "Building image complete"
+echo
+
+echo
+puts_step "Cleaning ..."
 docker stop $mysql && docker rm $mysql
+puts_step "Cleaning complete"
+echo
