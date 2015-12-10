@@ -32,6 +32,7 @@ gradle fC fM &> migration.log
 if [ "$?" != "0" ]; then
   puts_red "Migration failed"
   cat migration.log | puts_red_f
+  exit 1
 fi
 puts_green "Migration success"
 puts_step "Migration complete"
@@ -43,6 +44,7 @@ gradle test -i &> test.log
 if [ "$?" != "0" ]; then
   puts_red "Test failed"
   cat test.log | puts_red_f
+  exit 1
 fi
 puts_green "Test success"
 puts_step "Test complete"
@@ -53,6 +55,7 @@ gradle standaloneJar &>standalone.log
 if [ "$?" != "0" ]; then
   puts_red "Generate standalone failed"
   cat standalone.log | puts_red_f
+  exit 1
 fi
 puts_step "Generate standalone Complete"
 

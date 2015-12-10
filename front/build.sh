@@ -25,6 +25,7 @@ npm install &> install.log
 if [ "$?" != "0" ]; then
   puts_red "install depends failed"
   cat install.log | puts_red_f
+  exit 1
 fi
 puts_step "Install depends complete"
 
