@@ -22,16 +22,17 @@ puts_step "Start to verify..."
 sleep 20
 puts_step "Verify success"
 
-cd /tmp/repo
-if [ -f "manifest.json" ]; then
+if [ -f "/tmp/repo/manifest.json" ]; then
+    cd /tmp/git
     puts_step "Start sync to ketsu"
-#    first_commit=$(git log --reverse --pretty=format:%at |head -n1)
-#    last_commit=$(git log --pretty=format:%at -n 1)
-#    evaluation_duration=$(eval 'expr $last_commit - $first_commit')
-#    puts_green "firstcommit $first_commit"
-#    puts_green "lastcommit $last_commit"
-#    puts_green "duration $evaluation_duration"
+    first_commit=$(git log --reverse --pretty=format:%at |head -n1)
+    last_commit=$(git log --pretty=format:%at -n 1)
+    evaluation_duration=$(eval 'expr $last_commit - $first_commit')
+    puts_green "firstcommit $first_commit"
+    puts_green "lastcommit $last_commit"
+    puts_green "duration $evaluation_duration"
 
+    cd /tmp/repo
     evaluation_uri=$(cat manifest.json| jq -r '.evaluation_uri')
         puts_green "evaluationuri $evaluation_uri"
     if [ -z "$evaluation_uri" ] ; then
