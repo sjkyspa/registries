@@ -27,6 +27,12 @@ if [ "$?" != "0" ]; then
   cat install.log | puts_red_f
   exit 1
 fi
+npm install -g webpack &> webpack.log
+if [ "$?" != "0" ]; then
+  puts_red "install webpack failed"
+  cat webpack.log | puts_red_f
+  exit 1
+fi
 puts_step "Install depends complete"
 
 puts_step "Start packing ..."
