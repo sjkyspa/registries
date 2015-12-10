@@ -62,7 +62,7 @@ credential=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.
 ipport=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.service|jq -r '.node.nodes|.[]|select(.key != "/services/'"${APP_NAME}"'_mysql.service/data") |.value')
 export DATABASE="jdbc:mysql://${ipport}/appdb?${credential}"
 flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
-flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init-version"
+flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
 java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 ) > wrapper.sh
