@@ -1,21 +1,21 @@
 #!/bin/sh
 
 puts_red() {
-    echo "\e\033[0;31m      $@"
+    echo $"\e\033[0;31m      $@"
 }
 
 puts_red_f() {
   while read data; do
-    echo "\e\033[0;31m      $data"
+    echo $"\e\033[0;31m      $data"
   done
 }
 
 puts_green() {
-  echo "\e\033[0;32m      $@"
+  echo $"\e\033[0;32m      $@"
 }
 
 puts_step() {
-  echo "\e\033[0;34m -----> $@"
+  echo $"\e\033[0;34m -----> $@"
 }
 
 cd /tmp/repo/app
