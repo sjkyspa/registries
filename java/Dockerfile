@@ -45,4 +45,3 @@ RUN apk add --update wget ca-certificates && \
 # Set environment
 ENV JAVA_HOME /opt/jdk
 ENV PATH ${PATH}:${JAVA_HOME}/bin
-RUN apk del curl
