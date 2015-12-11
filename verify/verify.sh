@@ -25,7 +25,13 @@ puts_step "Verify success"
 if [ -f "/tmp/repo/manifest.json" ]; then
     cd /tmp/git
     puts_step "Start sync to ketsu"
-    first_commit=$(git log --reverse --pretty=format:%at |head -n1)
+    git log --reverse --pretty=format:%at
+    if [ "$?" != "0" ]; then
+        first_commit=$(stat -c%Y config)
+    else
+        first_commit=$(git log --reverse --pretty=format:%at |head -n1)
+    fi
+
     last_commit=$(date +%s)
     evaluation_duration=$(eval 'expr $last_commit - $first_commit')
 
