@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -eo pipefail
+set -x
 
 puts_red() {
     echo $'\033[0;31m'"      $@" $'\033[0m'
