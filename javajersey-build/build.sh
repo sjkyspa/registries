@@ -117,7 +117,7 @@ java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 ) > wrapper.sh
 
-cat > Dockerfile << EOF
+(cat << EOF
 FROM hub.deepi.cn/java
 RUN apk --update add tar bash
 ENV ETCD_VERSION 2.1.2
@@ -139,6 +139,7 @@ ENV APP_NAME $APP_NAME
 EXPOSE 8088
 ENTRYPOINT ["./wrapper.sh"]
 EOF
+) > Dockerfile
 
 echo
 puts_step "Building image ..."
