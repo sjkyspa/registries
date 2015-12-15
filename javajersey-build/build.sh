@@ -21,7 +21,7 @@ puts_step() {
   echo $'\033[0;34m'" -----> $@" $'\033[0m'
 }
 
-function ex {
+ex() {
     last_status=$?
     if [ "$last_status" != "0" ]; then
         if [ -f "process.log" ]; then
