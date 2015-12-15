@@ -1,4 +1,4 @@
-FROM 10.21.1.214:5000/java
+FROM hub.deepi.cn/java
 RUN apk --update add openssl bash
 
 ENV IVY_HOME /cache

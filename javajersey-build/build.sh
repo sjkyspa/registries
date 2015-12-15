@@ -19,7 +19,7 @@ puts_step() {
 }
 
 cd /tmp/repo/app
-mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql 10.21.1.214:5000/mysql)
+mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
 if [ $? -ne 0 ]; then
     exit 1
 fi
@@ -117,7 +117,7 @@ EOF
 ) > wrapper.sh
 
 cat > /tmp/repo/app/Dockerfile << EOF
-FROM 10.21.1.214:5000/java
+FROM hub.deepi.cn/java
 RUN apk --update add tar bash
 ENV ETCD_VERSION 2.1.2
 RUN curl -jksSL https://github.com/coreos/etcd/releases/download/v\${ETCD_VERSION}/etcd-v\${ETCD_VERSION}-linux-amd64.tar.gz \
