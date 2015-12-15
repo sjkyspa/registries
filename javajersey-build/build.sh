@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eo pipefail
+
 puts_red() {
     echo $'\033[0;31m'"      $@" $'\033[0m'
 }
@@ -18,46 +20,45 @@ puts_step() {
   echo $'\033[0;34m'" -----> $@" $'\033[0m'
 }
 
+function ex {
+    last_status=$?
+    if [ "$last_status" != "0" ]; then
+        if [ -f "process.log" ]; then
+          cat process.log|puts_red_f
+        fi
+        exit 1;
+    else
+        puts_green "build success"
+        exit 0;
+    fi
+}
+
+trap ex HUP INT TERM QUIT ABRT EXIT
+
 REPO="/tmp/repo"
-cd $REPO
+echo
+puts_step "Launching baking services ..."
 mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
-if [ $? -ne 0 ]; then
-    exit 1
-fi
 mysql_port=$(docker inspect ${mysql}|jq -r '.[0].NetworkSettings.Ports|to_entries[]|.value[0].HostPort')
 export DATABASE="jdbc:mysql://$HOST:$mysql_port/ke_tsu?user=mysql&password=mysql"
+puts_step "Complete Launching baking services"
+echo
 
+cd $REPO
 echo
 puts_step "Start migratioin ..."
-gradle fC fM &> migration.log
-if [ "$?" != "0" ]; then
-  puts_red "Migration failed"
-  cat migration.log | puts_red_f
-  exit 1
-fi
-puts_green "Migration success"
+gradle fC fM &> process.log
 puts_step "Migration complete"
 echo
 
 echo
 puts_step "Start test ..."
-gradle test -i &> test.log
-if [ "$?" != "0" ]; then
-  puts_red "Test failed"
-  cat test.log | puts_red_f
-  exit 1
-fi
-puts_green "Test success"
+gradle test -i &> process.log
 puts_step "Test complete"
 echo
 
 puts_step "Start generate standalone ..."
-gradle standaloneJar &>standalone.log
-if [ "$?" != "0" ]; then
-  puts_red "Generate standalone failed"
-  cat standalone.log | puts_red_f
-  exit 1
-fi
+gradle standaloneJar &>process.log
 puts_step "Generate standalone Complete"
 
 (cat  <<'EOF'
@@ -143,12 +144,12 @@ EOF
 
 echo
 puts_step "Building image ..."
-docker build -t $IMAGE .
-puts_step "Building image complete"
+docker build -t $IMAGE . &>process.log
+puts_step "Building image $IMAGE complete "
 echo
 
 echo
 puts_step "Cleaning ..."
-docker stop $mysql && docker rm $mysql
+docker stop $mysql &>process.log && docker rm $mysql &>process.log
 puts_step "Cleaning complete"
 echo
