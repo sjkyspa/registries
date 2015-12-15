@@ -18,7 +18,8 @@ puts_step() {
   echo $'\033[0;34m'" -----> $@" $'\033[0m'
 }
 
-cd /tmp/repo
+REPO="/tmp/repo"
+cd $REPO
 mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
 if [ $? -ne 0 ]; then
     exit 1
@@ -116,7 +117,7 @@ java -cp "/config:ketsu-standalone.jar" com.tw.Main
 EOF
 ) > wrapper.sh
 
-cat > /tmp/repo/app/Dockerfile << EOF
+cat > Dockerfile << EOF
 FROM hub.deepi.cn/java
 RUN apk --update add tar bash
 ENV ETCD_VERSION 2.1.2
@@ -141,7 +142,7 @@ EOF
 
 echo
 puts_step "Building image ..."
-docker build -t $IMAGE /tmp/repo/app
+docker build -t $IMAGE .
 puts_step "Building image complete"
 echo
 
