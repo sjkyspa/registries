@@ -115,7 +115,7 @@ ipport=$(curl -sL http://${host_ip}:4001/v2/keys/services/${APP_NAME}_mysql.serv
 export DATABASE="jdbc:mysql://${ipport}/appdb?${credential}"
 flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
 flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
-java -cp "/config:ketsu-standalone.jar" com.tw.Main
+java -jar app-standalone.jar
 EOF
 ) > wrapper.sh
 
@@ -134,7 +134,7 @@ RUN mkdir /usr/local/bin/flyway && \
     curl -jksSL https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz \
     | tar -xzf - -C /usr/local/bin/flyway --strip-components=1
 ENV PATH /usr/local/bin/flyway/:$PATH
-ADD build/libs/ketsu-standalone.jar ketsu-standalone.jar
+ADD build/libs/app-standalone.jar app-standalone.jar
 ADD wrapper.sh wrapper.sh
 RUN chmod +x wrapper.sh
 ENV APP_NAME $APP_NAME
