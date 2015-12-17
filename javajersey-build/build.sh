@@ -20,11 +20,19 @@ puts_step() {
   echo $'\033[0;34m'" -----> $@" $'\033[0m'
 }
 
-ex() {
+on_exit() {
     last_status=$?
     if [ "$last_status" != "0" ]; then
         if [ -f "process.log" ]; then
           cat process.log|puts_red_f
+        fi
+
+        if [ -n "$MYSQL_CONTAINER" ]; then
+            echo
+            puts_step "Cleaning ..."
+            docker stop $MYSQL_CONTAINER &>process.log && docker rm $MYSQL_CONTAINER &>process.log
+            puts_step "Cleaning complete"
+            echo
         fi
         exit 1;
     else
@@ -33,18 +41,18 @@ ex() {
     fi
 }
 
-trap ex HUP INT TERM QUIT ABRT EXIT
+trap on_exit HUP INT TERM QUIT ABRT EXIT
 
-REPO="/tmp/repo"
+CODEBASE="/codebase"
 echo
 puts_step "Launching baking services ..."
-mysql=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
-mysql_port=$(docker inspect ${mysql}|jq -r '.[0].NetworkSettings.Ports|to_entries[]|.value[0].HostPort')
-export DATABASE="jdbc:mysql://$HOST:$mysql_port/ke_tsu?user=mysql&password=mysql"
+MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
+MYSQL_PORT=$(docker inspect ${MYSQL_CONTAINER}|jq -r '.[0].NetworkSettings.Ports|to_entries[]|.value[0].HostPort')
+export DATABASE="jdbc:mysql://$HOST:$MYSQL_PORT/appdb?user=mysql&password=mysql"
 puts_step "Complete Launching baking services"
 echo
 
-cd $REPO
+cd $CODEBASE
 echo
 puts_step "Start migratioin ..."
 gradle fC fM &> process.log
@@ -146,10 +154,4 @@ echo
 puts_step "Building image ..."
 docker build -t $IMAGE . &>process.log
 puts_step "Building image $IMAGE complete "
-echo
-
-echo
-puts_step "Cleaning ..."
-docker stop $mysql &>process.log && docker rm $mysql &>process.log
-puts_step "Cleaning complete"
 echo
