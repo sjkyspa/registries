@@ -45,12 +45,13 @@ trap on_exit HUP INT TERM QUIT ABRT EXIT
 
 CODEBASE_DIR="/codebase"
 CACHE_DIR="/build_cache"
+HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
 echo
 puts_step "Launching baking services ..."
-MYSQL_CONTAINER=$(docker run -d -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
-CONTAINER_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${MYSQL_CONTAINER})
-export DATABASE="jdbc:mysql://${CONTAINER_IP}:3306/appdb?user=mysql&password=mysql"
+MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
+MYSQL_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort}}' ${MYSQL_CONTAINER})
+export DATABASE="jdbc:mysql://$HOST_IP:$MYSQL_PORT/appdb?user=mysql&password=mysql"
 puts_step "Complete Launching baking services"
 echo
 
