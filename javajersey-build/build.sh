@@ -43,7 +43,9 @@ on_exit() {
 
 trap on_exit HUP INT TERM QUIT ABRT EXIT
 
-CODEBASE="/codebase"
+CODEBASE_DIR="/codebase"
+CACHE_DIR="/build_cache"
+
 echo
 puts_step "Launching baking services ..."
 MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
@@ -52,21 +54,21 @@ export DATABASE="jdbc:mysql://$HOST:$MYSQL_PORT/appdb?user=mysql&password=mysql"
 puts_step "Complete Launching baking services"
 echo
 
-cd $CODEBASE
+cd $CODEBASE_DIR
 echo
 puts_step "Start migratioin ..."
-gradle fC fM &> process.log
+GRADLE_USER_HOME="$CACHE_DIR" gradle fC fM &> process.log
 puts_step "Migration complete"
 echo
 
 echo
 puts_step "Start test ..."
-gradle test -i &> process.log
+GRADLE_USER_HOME="$CACHE_DIR" gradle test -i &> process.log
 puts_step "Test complete"
 echo
 
 puts_step "Start generate standalone ..."
-gradle standaloneJar &>process.log
+GRADLE_USER_HOME="$CACHE_DIR" gradle standaloneJar &>process.log
 puts_step "Generate standalone Complete"
 
 (cat  <<'EOF'
