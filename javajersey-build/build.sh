@@ -48,9 +48,9 @@ CACHE_DIR="/build_cache"
 
 echo
 puts_step "Launching baking services ..."
-MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
-MYSQL_PORT=$(docker inspect ${MYSQL_CONTAINER}|jq -r '.[0].NetworkSettings.Ports|to_entries[]|.value[0].HostPort')
-export DATABASE="jdbc:mysql://$HOST:$MYSQL_PORT/appdb?user=mysql&password=mysql"
+MYSQL_CONTAINER=$(docker run -d -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
+CONTAINER_IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${MYSQL_CONTAINER})
+export DATABASE="jdbc:mysql://${CONTAINER_IP}:3306/appdb?user=mysql&password=mysql"
 puts_step "Complete Launching baking services"
 echo
 
