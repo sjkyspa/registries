@@ -1,5 +1,4 @@
 #!/bin/sh
-set -x
 cd /tmp/repo/
 
 puts_red() {
