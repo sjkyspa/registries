@@ -21,16 +21,16 @@ puts_step() {
 
 
 puts_step "Staring install depends ..."
-npm install &> install.log
+npm install
 if [ "$?" != "0" ]; then
   puts_red "install depends failed"
-  cat install.log | puts_red_f
+#  cat install.log | puts_red_f
   exit 1
 fi
-npm install -g webpack &> webpack.log
+npm install -g webpack
 if [ "$?" != "0" ]; then
   puts_red "install webpack failed"
-  cat webpack.log | puts_red_f
+#  cat webpack.log | puts_red_f
   exit 1
 fi
 puts_step "Install depends complete"
