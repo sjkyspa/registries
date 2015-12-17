@@ -52,6 +52,10 @@ puts_step "Launching baking services ..."
 MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
 MYSQL_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort}}' ${MYSQL_CONTAINER})
 export DATABASE="jdbc:mysql://$HOST_IP:$MYSQL_PORT/appdb?user=mysql&password=mysql"
+until nc -z $HOST_IP $MYSQL_PORT; do
+    echo "...."
+    sleep 1
+done
 puts_step "Complete Launching baking services"
 echo
 
