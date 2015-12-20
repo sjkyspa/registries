@@ -1,4 +1,4 @@
-FROM hub.deepi.cn/gradle
+FROM hub.deepi.cn/dind
 RUN apk --update add curl bash git
 RUN curl -jksSL https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/local/bin/jq && \
 	chmod +x /usr/local/bin/jq
