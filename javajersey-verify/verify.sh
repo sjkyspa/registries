@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eo pipefail
+
 puts_red() {
     echo $'\033[0;31m'"      $@" $'\033[0m'
 }
@@ -86,7 +88,7 @@ VERIFY_CONTAINER=$(docker run -d \
         -v /build_cache:/build_cache \
         -v /gitbare:/gitbare:ro \
         -e HOST=$HOST \
-        -e ENTRYPOINT=$ENTRYPOINT
+        -e ENTRYPOINT=$ENTRYPOINT \
          $VERFIY_IMAGE)
 
 docker attach $VERIFY_CONTAINER
