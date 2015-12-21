@@ -118,6 +118,6 @@ echo
 echo
 puts_step "Building verify image ..."
 GRADLE_USER_HOME="$CACHE_DIR" gradle itestJar &>process.log
-docker build -f Dockerfile.verfiy -t $VERIFY_IMAGE . &>process.log
+docker build -f Dockerfile.verify -t $VERIFY_IMAGE . &>process.log
 puts_step "Building verify image $VERIFY_IMAGE complete"
 echo
