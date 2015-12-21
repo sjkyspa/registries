@@ -80,7 +80,7 @@ APP_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "8088/tcp")
 ENTRYPOINT="http://$HOST_IP:$APP_PORT"
 puts_step "Run the $IMAGE complete"
 
-puts_step "Start run app verify: $VERFIY_IMAGE"
+puts_step "Start run app verify: $VERIFY_IMAGE"
 VERIFY_CONTAINER=$(docker run -d \
         --privileged \
         -v /var/run/docker.sock:/var/run/docker.sock \
@@ -89,6 +89,6 @@ VERIFY_CONTAINER=$(docker run -d \
         -v /gitbare:/gitbare:ro \
         -e HOST=$HOST \
         -e ENTRYPOINT=$ENTRYPOINT \
-         $VERFIY_IMAGE)
+         $VERIFY_IMAGE)
 
 docker attach $VERIFY_CONTAINER
