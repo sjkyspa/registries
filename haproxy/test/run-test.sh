@@ -1,9 +1,35 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+on_exit() {
+    last_status=$?
+    if [ "$last_status" != "0" ]; then
+        echo "error"
+        echo  "Cleaning ..."
+        if [ -n "$ETCD_CONTAINER" ]; then
+            echo
+            docker stop $ETCD_CONTAINER &>/dev/null && docker rm $ETCD_CONTAINER &>/dev/null
+            echo
+        fi
+        if [ -n "$HAPROXY_CONTAINER" ]; then
+            echo
+            docker stop $HAPROXY_CONTAINER &>/dev/null && docker rm $HAPROXY_CONTAINER &>/dev/null
+            echo
+        fi
+        echo "Clean complete"
+        exit 1;
+    else
+        echo "build success"
+        exit 0;
+    fi
+}
+
+trap on_exit HUP INT TERM QUIT ABRT EXIT
+
 docker build -t haproxy .
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
-(docker stop etcd && docker rm etcd || true) &&  docker run -d -p 4001:4001 -p 2380:2380 -p 2379:2379 \
+(docker stop etcd && docker rm etcd || true)
+ETCD_CONTAINER=$( docker run -d -p 4001:4001 -p 2380:2380 -p 2379:2379 \
  --name etcd quay.io/coreos/etcd \
  -name etcd0 \
  -advertise-client-urls http://${HostIP}:2379,http://${HostIP}:4001 \
@@ -12,9 +38,9 @@ HOST_IP=$(ip route|awk '/default/ { print $3 }')
  -listen-peer-urls http://0.0.0.0:2380 \
  -initial-cluster-token etcd-cluster-1 \
  -initial-cluster etcd0=http://${HostIP}:2380 \
- -initial-cluster-state new
+ -initial-cluster-state new)
 
-docker run -d --net=host -e BACKEND=http://$HOST_IP:4001 haproxy
+HAPROXY_CONTAINER=$(docker run -d --net=host -e BACKEND=http://$HOST_IP:4001 haproxy)
 
 until curl http://$HOST_IP:65535/ -v; do
     echo "...."
