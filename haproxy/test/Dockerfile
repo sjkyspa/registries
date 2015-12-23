@@ -3,6 +3,7 @@ RUN apk --update add curl bash
 
 ADD confd /app/confd
 ADD Dockerfile /app/Dockerfile
+ADD entrypoint.sh /app/entrypoint.sh
 ADD test/run-test.sh /app/run-test.sh
 WORKDIR /app
 
