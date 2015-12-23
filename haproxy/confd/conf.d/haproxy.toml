@@ -1,10 +1,4 @@
 [template]
-prefix = "haproxy-discover"
-keys = [
-  "services",
-  "tcp-services"
-]
-
 owner = "haproxy"
 mode = "0644"
 src = "haproxy.tmpl"
