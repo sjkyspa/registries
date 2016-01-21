@@ -1,7 +1,7 @@
 retry = "5s"
 max_stale = "10m"
 log_level = "info"
-
+wait = "2s:10s"
 template {
 	source = "/etc/consul-template/templates/haproxy.cfg.ctmpl"
 	destination = "/etc/haproxy/haproxy.cfg"
