@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+IP=$(ip route|awk '/default/ { print $3 }')
+echo $IP
+exec consul-template -consul $IP:8500 -config /etc/consul-template/config.toml

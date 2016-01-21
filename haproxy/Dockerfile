@@ -1,17 +1,20 @@
-FROM alpine:3.2
+FROM gliderlabs/alpine:3.3
+
+ENTRYPOINT ["/init"]
+
 RUN apk add --update haproxy curl bash
 
-RUN curl -sSL https://github.com/kelseyhightower/confd/releases/download/v0.11.0/confd-0.11.0-linux-amd64 -o /usr/bin/confd && \
-    chmod +x /usr/bin/confd
+ENV CONSUL_TEMPLATE_VERSION "0.12.1"
+ENV CONSUL_TEMPLATE_PKG "consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip"
+RUN curl -sSL https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/${CONSUL_TEMPLATE_PKG} -O \
+    && unzip ${CONSUL_TEMPLATE_PKG} -d /bin \
+    && rm -rf ${CONSUL_TEMPLATE_PKG}
 
-ENTRYPOINT ["./entrypoint.sh"]
 # clean up
-RUN apk del curl && \
-    rm -rf /var/cache/apk/*
+RUN rm -rf /var/cache/apk/*
 
+COPY rootfs /
+RUN curl -sSL https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz \
+        | tar -xzf - -C /
 
-EXPOSE 51000-65535
-
-ADD confd /etc/confd
-ADD entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh
+CMD []
