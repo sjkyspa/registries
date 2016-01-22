@@ -30,3 +30,12 @@ listen {{ index $name_port 0 }}
 {{ end }}
 {{ end }}
 {{ end }}
+
+listen health-check
+    mode http
+    bind 0.0.0.0:65535
+    stats enable
+    stats uri /
+    stats refresh 5s
+    stats show-node
+    stats show-legends
