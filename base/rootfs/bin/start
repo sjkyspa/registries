@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+if [ -n $SERVICES ] ; then
+    SERVICE_PORTS=$(echo $SERVICES|sed -e 's/,/\n/g'|awk -F: '{print $2}')
+    SERVICE_COUNT=$(echo -e "$SERVICE_PORTS" |wc -l)
+    while [ 0 -lt $SERVICE_COUNT ]; do
+        for PORT in $SERVICE_PORTS; do
+            netstat -ln | grep "LISTEN"|grep "$PORT"
+            if [ $? -eq 0 ]; then
+                SERVICE_COUNT=`expr $SERVICE_COUNT - 1`
+                SERVICE_PORTS=$(echo -e "$SERVICE_PORTS"|grep -v "$PORT")
+            fi
+        done
+        sleep 1
+    done
+fi
+
+exec "$@"

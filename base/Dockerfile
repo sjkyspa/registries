@@ -1,6 +1,6 @@
 FROM gliderlabs/alpine:3.3
 
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["/init", "start"]
 
 RUN apk add --update haproxy curl bash
 
