@@ -39,3 +39,28 @@ listen health-check
     stats refresh 5s
     stats show-node
     stats show-legends
+
+listen consul
+    bind 0.0.0.0:8500
+    mode tcp
+    option tcplog
+    balance leastconn
+    server consul {{env "HOST"}}:8500
+
+listen marathon
+    bind 0.0.0.0:8080
+    mode tcp
+    option tcplog
+    balance leastconn
+    {{ range service "marathon" }}
+    server {{ .Name }} {{ .Address }}:{{ .Port }}
+    {{ end }}
+
+listen mesos
+    bind 0.0.0.0:5050
+    mode tcp
+    option tcplog
+    balance leastconn
+    {{ range service "master.mesos" }}
+    server {{ .Name }} {{ .Address }}:{{ .Port }}
+    {{ end }}

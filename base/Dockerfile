@@ -1,7 +1,5 @@
 FROM gliderlabs/alpine:3.3
 
-ENTRYPOINT ["/init", "start"]
-
 RUN apk add --update haproxy curl bash
 
 ENV CONSUL_TEMPLATE_VERSION "0.12.1"
@@ -17,4 +15,5 @@ COPY rootfs /
 RUN curl -sSL https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz \
         | tar -xzf - -C /
 
+ENTRYPOINT ["/init", "start"]
 CMD []
