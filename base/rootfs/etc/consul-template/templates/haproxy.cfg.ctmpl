@@ -11,9 +11,9 @@ defaults
 {{range ls "service/haproxy/timeouts"}}
     timeout {{.Key}} {{.Value}}
 {{else}}
-    timeout connect 5000ms
-    timeout client 50000ms
-    timeout server 50000ms
+    timeout connect 1h
+    timeout client 1h
+    timeout server 1h
 {{end}}
 
 {{ with $dep_services := (env "SERVICES" | split ",") }}
