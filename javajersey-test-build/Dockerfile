@@ -1,4 +1,4 @@
-FROM hub.deepi.cn/java
+FROM hub.deepi.cn/gradle
 
 ENTRYPOINT ["./build.sh"]
 

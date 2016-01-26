@@ -73,15 +73,15 @@ cd $CODEBASE_DIR
 # echo
 
 puts_step "Start generate standalone ..."
-# GRADLE_USER_HOME="$CACHE_DIR" gradle standaloneJar &>process.log
+GRADLE_USER_HOME="$CACHE_DIR" gradle standaloneJar &>process.log
 puts_step "Generate standalone Complete"
 
 (cat  <<'EOF'
 #!/bin/sh
 # flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
 # flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
-nc -l -p 8088
-# java -jar app-standalone.jar
+# nc -l -p 8088
+java -jar app-standalone.jar
 EOF
 ) > wrapper.sh
 
@@ -94,7 +94,7 @@ FROM hub.deepi.cn/java
 #     curl -jksSL https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz \
 #     | tar -xzf - -C /usr/local/bin/flyway --strip-components=1
 # ENV PATH /usr/local/bin/flyway/:$PATH
-# ADD build/libs/app-standalone.jar app-standalone.jar
+ADD build/libs/app-standalone.jar app-standalone.jar
 ADD wrapper.sh wrapper.sh
 RUN chmod +x wrapper.sh
 ENV APP_NAME $APP_NAME
