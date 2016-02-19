@@ -15,5 +15,5 @@ COPY rootfs /
 RUN curl -sSL https://github.com/just-containers/s6-overlay/releases/download/v1.17.1.1/s6-overlay-amd64.tar.gz \
         | tar -xzf - -C /
 
-ENTRYPOINT ["/init", "start"]
+ENTRYPOINT ["/init"]
 CMD []
