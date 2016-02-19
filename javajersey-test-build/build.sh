@@ -44,7 +44,6 @@ on_exit() {
 trap on_exit HUP INT TERM QUIT ABRT EXIT
 
 CODEBASE_DIR=$CODEBASE
-CACHE_DIR="/build_cache"
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
 # echo
