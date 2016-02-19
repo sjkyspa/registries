@@ -1,4 +1,4 @@
-FROM alpine:3.2
+FROM hub.deepi.cn/base
 RUN apk --update add curl
 ENV DOCKER_BUCKET get.docker.com
 ENV DOCKER_VERSION 1.8.3
