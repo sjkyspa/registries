@@ -3,11 +3,12 @@ IP=$(ip route|awk '/default/ { print $3 }')
 nohup consul-template -consul $IP:8500 -config /etc/consul-template/conf.d &
 
 until curl http://127.0.0.1:65535 &>/dev/null; do
-    echo "starting ...."
+    echo "init...."
     sleep 0.5
 done
 
 # service health check
+echo 'health check for services:[' "$SERVICES" ']'
 if [ -n "$SERVICES" ] ; then
     SERVICE_PORTS=$(echo "$SERVICES"|sed -e 's/,/\n/g'|awk -F: '{print $2}')
     SERVICE_COUNT=$(echo -e "$SERVICE_PORTS" |wc -l)
@@ -19,6 +20,7 @@ if [ -n "$SERVICES" ] ; then
                 SERVICE_PORTS=$(echo -e "$SERVICE_PORTS"|grep -v "$PORT")
             fi
         done
+        echo "waiting services $SERVICES...."
         sleep 0.5
     done
 fi
