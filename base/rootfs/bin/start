@@ -6,8 +6,8 @@ until curl http://127.0.0.1:65535 &>/dev/null; do
 done
 
 # service health check
-if [ -n $SERVICES ] ; then
-    SERVICE_PORTS=$(echo $SERVICES|sed -e 's/,/\n/g'|awk -F: '{print $2}')
+if [ -n "$SERVICES" ] ; then
+    SERVICE_PORTS=$(echo "$SERVICES"|sed -e 's/,/\n/g'|awk -F: '{print $2}')
     SERVICE_COUNT=$(echo -e "$SERVICE_PORTS" |wc -l)
     while [ 0 -lt $SERVICE_COUNT ]; do
         for PORT in $SERVICE_PORTS; do
@@ -20,5 +20,5 @@ if [ -n $SERVICES ] ; then
         sleep 1
     done
 fi
-
+echo "start command"
 exec "$@"

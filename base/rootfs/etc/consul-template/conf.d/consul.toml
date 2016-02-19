@@ -1,0 +1,4 @@
+retry = "5s"
+max_stale = "10m"
+log_level = "warn"
+wait = "2s:10s"
