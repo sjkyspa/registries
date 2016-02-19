@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+# haproxy health check
+until curl http://127.0.0.1:65535 &>/dev/null; do
+    echo "starting ...."
+    sleep 0.5
+done
+
+# service health check
 if [ -n $SERVICES ] ; then
     SERVICE_PORTS=$(echo $SERVICES|sed -e 's/,/\n/g'|awk -F: '{print $2}')
     SERVICE_COUNT=$(echo -e "$SERVICE_PORTS" |wc -l)

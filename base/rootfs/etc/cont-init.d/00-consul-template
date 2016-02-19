@@ -1,7 +1,3 @@
 #!/usr/bin/with-contenv sh
 IP=$(ip route|awk '/default/ { print $3 }')
-nohup consul-template -consul $IP:8500 -config /etc/consul-template/conf.d &
-until curl http://127.0.0.1:65535 &>/dev/null; do
-    echo "starting ...."
-    sleep 0.5
-done
+exec consul-template -consul $IP:8500 -config /etc/consul-template/conf.d
