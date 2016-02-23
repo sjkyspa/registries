@@ -45,7 +45,7 @@ listen consul
     mode tcp
     option tcplog
     balance leastconn
-    server consul {{env "HOST"}}:8500
+    server consul {{env "CONSUL_HOST"}}:8500
 
 listen marathon
     bind 0.0.0.0:8080
