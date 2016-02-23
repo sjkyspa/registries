@@ -98,7 +98,7 @@ ADD wrapper.sh wrapper.sh
 RUN chmod +x wrapper.sh
 ENV APP_NAME $APP_NAME
 EXPOSE 8088
-ENTRYPOINT ["/init", "./wrapper.sh"]
+CMD ["./wrapper.sh"]
 EOF
 ) > Dockerfile
 

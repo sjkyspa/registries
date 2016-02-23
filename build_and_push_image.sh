@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 hub='hub.deepi.cn'
 echo "build $1"
 docker build -t $hub/$1 $1
