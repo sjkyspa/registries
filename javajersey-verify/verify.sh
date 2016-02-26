@@ -22,6 +22,7 @@ puts_step() {
 
 on_exit() {
     last_status=$?
+    echo $last_status
     if [ "$last_status" != "0" ]; then
         if [ -f "process.log" ]; then
           cat process.log|puts_red_f
@@ -57,38 +58,51 @@ trap on_exit HUP INT TERM QUIT ABRT EXIT
 
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
+cd $CODEBASE
+
 echo
-puts_step "Launching baking services ..."
-MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
-MYSQL_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort}}' ${MYSQL_CONTAINER})
-DATABASE="jdbc:mysql://$HOST_IP:$MYSQL_PORT/appdb?user=mysql&password=mysql"
-until docker exec $MYSQL_CONTAINER mysql -h127.0.0.1 -P3306 -umysql -pmysql -e "select 1" &>/dev/null ; do
-    echo "...."
-    sleep 1
-done
-puts_step "Complete Launching baking services"
-
-puts_step "Start run the $IMAGE"
+puts_step "Building verify jar..."
+GRADLE_USER_HOME="$CACHE_DIR" gradle itestJar &>process.log
+puts_step "Build verify finished"
+puts_step "Start verify"
+ENTRYPOINT=$ENDPOINT java -jar build/libs/verify-standalone.jar
+puts_step "Verify finished"
+# docker build -f Dockerfile.verify -t $VERIFY_IMAGE . &>process.log
+# puts_step "Building verify image $VERIFY_IMAGE complete"
 echo
-IMAGE_CONTAINER=$(docker run \
-        -d -P \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -e HOST=$HOST \
-        -e DATABASE=$DATABASE \
-         $IMAGE)
-APP_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "8088/tcp") 0).HostPort}}' ${IMAGE_CONTAINER})
-ENTRYPOINT="http://$HOST_IP:$APP_PORT"
-puts_step "Run the $IMAGE complete"
 
-puts_step "Start run app verify: $VERIFY_IMAGE"
-VERIFY_CONTAINER=$(docker run -d \
-        --privileged \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        -v /codebase:/codebase \
-        -v /build_cache:/build_cache \
-        -v /gitbare:/gitbare:ro \
-        -e HOST=$HOST \
-        -e ENTRYPOINT=$ENTRYPOINT \
-         $VERIFY_IMAGE)
+# echo
+# puts_step "Launching baking services ..."
+# MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=appdb -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
+# MYSQL_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort}}' ${MYSQL_CONTAINER})
+# DATABASE="jdbc:mysql://$HOST_IP:$MYSQL_PORT/appdb?user=mysql&password=mysql"
+# until docker exec $MYSQL_CONTAINER mysql -h127.0.0.1 -P3306 -umysql -pmysql -e "select 1" &>/dev/null ; do
+#     echo "...."
+#     sleep 1
+# done
+# puts_step "Complete Launching baking services"
 
-docker attach $VERIFY_CONTAINER
+# puts_step "Start run the $IMAGE"
+# echo
+# IMAGE_CONTAINER=$(docker run \
+#         -d -P \
+#         -v /var/run/docker.sock:/var/run/docker.sock \
+#         -e HOST=$HOST \
+#         -e DATABASE=$DATABASE \
+#          $IMAGE)
+# APP_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "8088/tcp") 0).HostPort}}' ${IMAGE_CONTAINER})
+# ENTRYPOINT="http://$HOST_IP:$APP_PORT"
+# puts_step "Run the $IMAGE complete"
+
+# puts_step "Start run app verify: $VERIFY_IMAGE"
+# VERIFY_CONTAINER=$(docker run -d \
+#         --privileged \
+#         -v /var/run/docker.sock:/var/run/docker.sock \
+#         -v /codebase:/codebase \
+#         -v /build_cache:/build_cache \
+#         -v /gitbare:/gitbare:ro \
+#         -e HOST=$HOST \
+#         -e ENTRYPOINT=$ENDPOINT \
+#          $VERIFY_IMAGE)
+#
+# docker attach $VERIFY_CONTAINER
