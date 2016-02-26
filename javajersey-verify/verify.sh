@@ -65,7 +65,7 @@ puts_step "Building verify jar..."
 GRADLE_USER_HOME="$CACHE_DIR" gradle itestJar &>process.log
 puts_step "Build verify finished"
 puts_step "Start verify"
-ENTRYPOINT=$ENDPOINT java -jar build/libs/verify-standalone.jar
+ENTRYPOINT=http://$ENDPOINT java -jar build/libs/verify-standalone.jar
 puts_step "Verify finished"
 # docker build -f Dockerfile.verify -t $VERIFY_IMAGE . &>process.log
 # puts_step "Building verify image $VERIFY_IMAGE complete"
