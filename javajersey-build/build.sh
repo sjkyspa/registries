@@ -65,7 +65,7 @@ export DB_HOST=$HOST_IP
 export DB_PORT=$MYSQL_PORT
 export DB_USERNAME=mysql
 export DB_PASSWORD=mysql
-export DATABASE="jdbc:mysql://$DB_HOST:$DB_PORT/ke_tsu?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull"
+export DATABASE="jdbc:mysql://$DB_HOST:$DB_PORT/ke_tsu?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&createDatabaseIfNotExist=true"
 echo $DATABASE
 puts_step "Complete Launching baking services"
 echo
@@ -91,9 +91,9 @@ puts_step "Generate standalone Complete"
 (cat  <<'EOF'
 #!/bin/sh
 
-export DATABASE="jdbc:mysql://\$DB_HOST:\$DB_PORT/ke_tsu?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull"
-flyway migrate -url="\$DATABASE" -locations=filesystem:`pwd`/dbmigration
-flyway migrate -url="\$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
+export DATABASE="jdbc:mysql://127.0.0.1:$DB_PORT/ke_tsu?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&createDatabaseIfNotExist=true"
+flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
+flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
 java -jar app-standalone.jar
 EOF
 ) > wrapper.sh
@@ -101,7 +101,7 @@ EOF
 (cat << EOF
 FROM hub.deepi.cn/jre-8.66
 
-ENTRYPOINT ["./wrapper.sh"]
+CMD ["./wrapper.sh"]
 
 RUN apk --update add tar
 RUN mkdir /usr/local/bin/flyway && \
@@ -114,13 +114,14 @@ ADD build/libs/app-standalone.jar app-standalone.jar
 ADD wrapper.sh wrapper.sh
 RUN chmod +x wrapper.sh
 ENV APP_NAME \$APP_NAME
-EXPOSE 8088
 
 ADD src/main/resources/db/migration dbmigration
 ADD src/main/resources/db/init initmigration
 
 EOF
 ) > Dockerfile
+
+cat Dockerfile
 
 # (cat << EOF
 # FROM hub.deepi.cn/java
