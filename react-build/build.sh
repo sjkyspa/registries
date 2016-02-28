@@ -65,7 +65,7 @@ puts_step "Packing complete"
 
 cat > run.sh << EOF
 #!/bin/sh
-cp -rf /dist /usr/share/nginx/html
+cp -rf /dist/* /usr/share/nginx/html
 sed -i -e "s#{{API_PREFIX}}#\$API_PREFIX#g" /usr/share/nginx/html/bundle.js
 exec "\$@"
 EOF
