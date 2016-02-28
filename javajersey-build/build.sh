@@ -80,7 +80,7 @@ echo
 
 echo
 puts_step "Start test ..."
-GRADLE_USER_HOME="$CACHE_DIR" gradle test -i &> process.log
+GRADLE_USER_HOME="$CACHE_DIR" gradle clean test -i &> process.log
 puts_step "Test complete"
 echo
 
