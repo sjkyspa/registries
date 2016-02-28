@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 set -eo pipefail
 
@@ -57,6 +57,39 @@ on_exit() {
 trap on_exit HUP INT TERM QUIT ABRT EXIT
 
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
+
+GIT_PATH=$CODEBASE/../../
+CURRENT_DIR=$CODEBASE
+
+if [ -f "$CODEBASE/manifest.json" ]; then
+    echo 'manifest exists'
+    cd $GIT_PATH
+    echo `pwd`
+    git --no-pager log --reverse --pretty=format:%at &>/dev/null
+    if [ "$?" != "0" ]; then
+        first_commit=$(stat -c%Y config)
+    else
+        first_commit=$(git --no-pager log --reverse --pretty=format:%at |head -n1)
+    fi
+
+    cd $CODEBASE
+    evaluation_uri=$(cat manifest.json| jq -r '.evaluation_uri')
+
+    echo "$evaluation_uri"
+    if [ -z "$evaluation_uri" ] ; then
+        puts_red "missing manifest.json"
+        exit 1
+    fi
+    entry_point='http://ke-tsu-api.deepi.cn'
+    if [ -z "$entry_point" ] ; then
+        puts_red "bad format of manifest.json"
+        exit 1
+    fi
+    echo "entry_point=${entry_point}" > $CURRENT_DIR/src/itest/resources/meta.properties
+    echo "evaluation_uri=${evaluation_uri}" >> $CURRENT_DIR/src/itest/resources/meta.properties
+    echo "first_commit=${first_commit}" >> $CURRENT_DIR/src/itest/resources/meta.properties
+    cat $CURRENT_DIR/src/itest/resources/meta.properties
+fi
 
 cd $CODEBASE
 

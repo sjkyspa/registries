@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-hub='192.168.99.100:5000'
+hub='hub.deepi.cn'
 echo "build $1"
 docker build -t $hub/$1 $1
 echo "push $1 to $hub"
