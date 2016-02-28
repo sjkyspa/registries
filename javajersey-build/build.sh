@@ -55,7 +55,7 @@ HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
 echo
 puts_step "Launching baking services ..."
-MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql hub.deepi.cn/mysql)
+MYSQL_CONTAINER=$(docker run -d -P -e MYSQL_USER=mysql -e MYSQL_PASS=mysql -e MYSQL_PASSWORD=mysql -e ON_CREATE_DB=ke_tsu -e MYSQL_ROOT_PASSWORD=mysql tutum/mysql)
 MYSQL_PORT=$(docker inspect -f '{{(index (index .NetworkSettings.Ports "3306/tcp") 0).HostPort}}' ${MYSQL_CONTAINER})
 until docker exec $MYSQL_CONTAINER mysql -h127.0.0.1 -P3306 -umysql -pmysql -e "select 1" &>/dev/null ; do
     echo "...."
