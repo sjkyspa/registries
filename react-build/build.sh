@@ -65,6 +65,7 @@ puts_step "Packing complete"
 
 cat > run.sh << EOF
 #!/bin/sh
+cp -rf /dist /usr/share/nginx/html
 sed -i -e "s#{{API_PREFIX}}#\$API_PREFIX#g" /usr/share/nginx/html/bundle.js
 exec "\$@"
 EOF
@@ -74,7 +75,7 @@ FROM hub.deepi.cn/nginx
 EXPOSE 80
 ADD run.sh run.sh
 RUN chmod +x run.sh
-ADD /dist /usr/share/nginx/html
+ADD /dist /dist
 ENTRYPOINT ["./run.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 EOF
