@@ -58,7 +58,6 @@ trap on_exit HUP INT TERM QUIT ABRT EXIT
 
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
-GIT_PATH=$CODEBASE/../../
 CURRENT_DIR=$CODEBASE
 
 if [ -f "$CODEBASE/manifest.json" ]; then

@@ -4,6 +4,7 @@ ENTRYPOINT ["./verify.sh"]
 
 RUN curl -jksSL https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/local/bin/jq && \
 	chmod +x /usr/local/bin/jq
+RUN apk --update add git && rm /var/cache/apk/*
 WORKDIR /home
 ADD verify.sh verify.sh
 RUN chmod a+x verify.sh
