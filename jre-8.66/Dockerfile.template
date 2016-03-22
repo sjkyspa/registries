@@ -1,4 +1,4 @@
-FROM hub.deepi.cn/base
+FROM {{REGISTRY}}/base
 RUN apk --update add curl
 # Java Version
 ENV JAVA_VERSION_MAJOR 8

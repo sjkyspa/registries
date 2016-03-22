@@ -1,4 +1,4 @@
-FROM hub.deepi.cn/gradle
+FROM {{REGISTRY}}/gradle
 
 ENTRYPOINT ["./verify.sh"]
 

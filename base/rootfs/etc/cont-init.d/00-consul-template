@@ -1,5 +1,10 @@
 #!/usr/bin/with-contenv sh
-IP=$(ip route|awk '/default/ { print $3 }')
+if [ "$HOST" != "" ]; then
+    IP=$HOST
+else
+    IP=$(netstat -nr | grep '^0\.0\.0\.0' |awk '{print $2}')
+fi
+
 export CONSUL_HOST=$IP
 nohup consul-template -consul $IP:8500 -config /etc/consul-template/conf.d &
 
