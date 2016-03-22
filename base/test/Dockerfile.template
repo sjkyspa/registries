@@ -1,4 +1,4 @@
-FROM hub.deepi.cn/dind
+FROM {{REGISTRY}}/dind
 RUN apk --update add curl bash
 
 ADD confd /app/confd
