@@ -9,8 +9,8 @@ gen
 # Created by .ignore support plugin (hsz.mobi)
 
 */Dockerfile
-base/test/Dockerfile
-!base/Dockerfile
-!nginx/Dockerfile
+000-base/test/Dockerfile
+!000-base/Dockerfile
+!005-nginx/Dockerfile
 !react-build/Dockerfile
 !react-verify/Dockerfile
