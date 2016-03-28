@@ -1,4 +1,4 @@
-FROM {{REGISTRY}}/gradle
+FROM {{REGISTRY}}/gradle:{{VERSION}}
 
 ENTRYPOINT ["./verify.sh"]
 
