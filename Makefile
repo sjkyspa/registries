@@ -3,10 +3,12 @@ setup:
 	@for folder in $$(find . -name "Dockerfile" -depth 2 -print); do \
 		pushd $$(dirname $$folder) &>/dev/null; \
 		image=$$(echo $$folder | cut -c3- | sed 's/^[0-9]*-//g'); \
-		echo "build the $$image"; \
-		docker build -t $$(dirname $$image) . ; \
-		docker tag -f $$(dirname $$image) $$REGISTRY/$$(dirname $$image); \
-		echo "push to $$REGISTRY/$$(dirname $$image)"; \
+		echo "Building the $$image"; \
+		docker build -q -t $$(dirname $$image) . ; \
+		echo "Build $$image success"; \
+		docker tag $$(dirname $$image) $$REGISTRY/$$(dirname $$image); \
+		echo "pushing $$REGISTRY/$$(dirname $$image)"; \
 		docker push $$REGISTRY/$$(dirname $$image); \
+		echo "push $$REGISTRY/$$(dirname $$image) success"; \
 		popd &>/dev/null ;\
 	done
