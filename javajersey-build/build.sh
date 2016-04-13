@@ -105,7 +105,7 @@ CMD ["./wrapper.sh"]
 
 RUN apk --update add tar
 RUN mkdir /usr/local/bin/flyway && \
-    curl -jksSL https://bintray.com/artifact/download/business/maven/flyway-commandline-3.2.1-linux-x64.tar.gz \
+    curl -jksSL https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.0/flyway-commandline-4.0.tar.gz \
     | tar -xzf - -C /usr/local/bin/flyway --strip-components=1
 ENV PATH /usr/local/bin/flyway/:\$PATH
 
