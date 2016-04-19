@@ -43,7 +43,6 @@ on_exit() {
             puts_step "Cleaning complete"
             echo
         fi
-        puts_green "build success"
         exit 0;
     fi
 }

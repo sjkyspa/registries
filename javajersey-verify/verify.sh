@@ -49,7 +49,6 @@ on_exit() {
 
         exit 1;
     else
-        puts_green "build success"
         exit 0;
     fi
 }
