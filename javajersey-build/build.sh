@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -eo pipefail
 
@@ -66,7 +66,6 @@ export DB_PORT=$MYSQL_PORT
 export DB_USERNAME=mysql
 export DB_PASSWORD=mysql
 export DATABASE="jdbc:mysql://$DB_HOST:$DB_PORT/ke_tsu?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&createDatabaseIfNotExist=true"
-echo $DATABASE
 puts_step "Complete Launching baking services"
 echo
 
@@ -121,8 +120,6 @@ ADD src/main/resources/db/init initmigration
 EOF
 ) > Dockerfile
 
-cat Dockerfile
-
 # (cat << EOF
 # FROM hub.deepi.cn/java
 # ADD build/libs/verify-standalone.jar verify-standalone.jar
@@ -131,8 +128,8 @@ cat Dockerfile
 # ) > Dockerfile.verify
 
 echo
-puts_step "Building image ..."
-docker build -t $IMAGE . &>process.log
+puts_step "Building image $IMAGE ..."
+docker build -q -t $IMAGE . &>process.log
 puts_step "Building image $IMAGE complete "
 echo
 
