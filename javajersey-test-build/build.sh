@@ -85,7 +85,7 @@ EOF
 ) > wrapper.sh
 
 (cat << EOF
-FROM hub.deepi.cn/java
+FROM $REGISTRY/jre-8.66:0.1
 # RUN apk --update add tar
 # ADD src/main/resources/db/migration dbmigration
 # ADD src/main/resources/db/init initmigration
@@ -103,7 +103,7 @@ EOF
 ) > Dockerfile
 
 # (cat << EOF
-# FROM hub.deepi.cn/java
+FROM $REGISTRY/jre-8.66:0.1
 # ADD build/libs/verify-standalone.jar verify-standalone.jar
 # CMD ["java", "-jar", "verify-standalone.jar"]
 # EOF
