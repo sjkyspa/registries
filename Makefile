@@ -7,7 +7,7 @@ setup:
 		echo "Building the $$image"; \
 		docker build -q $(DOCKER_BUILD_OPTS) -t $$(dirname $$image) . ; \
 		echo "Build $$image success"; \
-		docker tag $$(dirname $$image) $$REGISTRY/$$(dirname $$image); \
+		docker tag -f $$(dirname $$image) $$REGISTRY/$$(dirname $$image); \
 		echo "pushing $$REGISTRY/$$(dirname $$image)"; \
 		docker push $$REGISTRY/$$(dirname $$image); \
 		echo "push $$REGISTRY/$$(dirname $$image) success"; \
