@@ -29,7 +29,6 @@ on_exit() {
         if [ -n "$MYSQL_CONTAINER" ]; then
             echo
             puts_step "Cleaning ..."
-            docker stop $MYSQL_CONTAINER &>process.log && docker rm $MYSQL_CONTAINER &>process.log
             puts_step "Cleaning complete"
             echo
         fi
@@ -48,13 +47,11 @@ puts_step "Staring install depends ..."
 npm install
 if [ "$?" != "0" ]; then
   puts_red "install depends failed"
-#  cat install.log | puts_red_f
   exit 1
 fi
 npm install -g webpack
 if [ "$?" != "0" ]; then
   puts_red "install webpack failed"
-#  cat webpack.log | puts_red_f
   exit 1
 fi
 puts_step "Install depends complete"
@@ -72,7 +69,6 @@ EOF
 
 cat > Dockerfile << EOF
 FROM $REGISTRY/nginx:0.1
-nginx
 EXPOSE 80
 ADD run.sh run.sh
 RUN chmod +x run.sh
