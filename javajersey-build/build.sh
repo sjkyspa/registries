@@ -101,7 +101,7 @@ EOF
 ) > wrapper.sh
 
 (cat << EOF
-FROM $REGISTRY/jre-8.66:0.1
+FROM hub.deepi.cn/jre-8.66:0.1
 
 CMD ["./wrapper.sh"]
 
@@ -124,7 +124,7 @@ EOF
 ) > Dockerfile
 
 # (cat << EOF
-#FROM $REGISTRY/jre-8.66:0.1
+#FROM hub.deepi.cn/jre-8.66:0.1
 # ADD build/libs/verify-standalone.jar verify-standalone.jar
 # CMD ["java", "-jar", "verify-standalone.jar"]
 # EOF
