@@ -55,10 +55,9 @@ HOST_IP=$(ip route|awk '/default/ { print $3 }')
 cd $CODEBASE_DIR
 
 bundle install --without development production
-export RAILS_ENV test
 
 echo
 puts_step "Run verify ..."
-bundle exec cucumber
+cd features && bundle exec rspec spec
 puts_step "Run verify complete"
 echo
