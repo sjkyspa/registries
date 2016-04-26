@@ -124,7 +124,7 @@ RUN cd /app && bundle install --without development test
 ENV RAILS_ENV production
 WORKDIR /app
 
-CMD ["bundle", "exec", "unicorn", "-p", "8080", "-c", "./config/unicorn.rb"]
+CMD ["bundle", "exec", "unicorn", "-p", "8088", "-c", "./config/unicorn.rb"]
 
 EOF
 ) > Dockerfile
