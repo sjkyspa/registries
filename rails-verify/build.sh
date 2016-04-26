@@ -49,7 +49,7 @@ on_exit() {
 
 trap on_exit HUP INT TERM QUIT ABRT EXIT
 
-export ENDPOINT=http://$ENDPOINT
+export ENTRYPOINT=http://$ENDPOINT
 
 CODEBASE_DIR=$CODEBASE
 HOST_IP=$(ip route|awk '/default/ { print $3 }')
