@@ -56,10 +56,10 @@ HOST_IP=$(ip route|awk '/default/ { print $3 }')
 
 cd $CODEBASE_DIR
 
-bundle install --without development production
+bundle install
 
 echo
 puts_step "Run verify ..."
-cd features && bundle exec rspec spec
+cd features && bundle exec rspec spec --require ./custom_formatter.rb --format CustomFormatter
 puts_step "Run verify complete"
 echo
