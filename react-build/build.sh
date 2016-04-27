@@ -68,7 +68,7 @@ exec "\$@"
 EOF
 
 cat > Dockerfile << EOF
-FROM $REGISTRY/nginx:0.1
+FROM hub.deepi.cn/nginx:0.1
 EXPOSE 80
 ADD run.sh run.sh
 RUN chmod +x run.sh
