@@ -94,7 +94,7 @@ puts_step "Generate standalone Complete"
 #!/bin/sh
 
 export DATABASE="jdbc:mysql://127.0.0.1:$DB_PORT/$DB_NAME?user=mysql&password=mysql&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&createDatabaseIfNotExist=true"
-flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration
+flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/dbmigration -baselineOnMigrate=true -baselineVersion=0
 [ -d `pwd`/initmigration  ] && flyway migrate -url="$DATABASE" -locations=filesystem:`pwd`/initmigration -table="init_version" -baselineOnMigrate=true -baselineVersion=0
 java -jar app-standalone.jar
 EOF
