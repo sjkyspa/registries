@@ -13,3 +13,5 @@ gen
 !000-base/Dockerfile
 !005-nginx/Dockerfile
 !react-verify/Dockerfile
+!rails-verify/Dockerfile
+!rails-build/Dockerfile
