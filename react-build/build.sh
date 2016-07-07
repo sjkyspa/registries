@@ -57,6 +57,7 @@ fi
 puts_step "Install depends complete"
 
 puts_step "Start packing ..."
+export NODE_ENV=production
 webpack
 puts_step "Packing complete"
 
